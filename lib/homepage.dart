@@ -61,10 +61,20 @@ class _HomePageState extends State<HomePage> {
         children: [
           Row(
             children: [
+              TextButton.icon(
+                icon: Icon(Icons.arrow_back),
+                label: Text('Back'),
+                onPressed: () {},
+              ),
               Text("${selectedDate.toLocal()}".split(' ')[0]),
               ElevatedButton(
                 onPressed: () => _selectDate(context),
                 child: Text('Select date'),
+              ),
+              TextButton.icon(
+                icon: Icon(Icons.arrow_forward),
+                label: Text('Forward'),
+                onPressed: () {},
               ),
             ],
           ),
@@ -97,8 +107,12 @@ class _HomePageState extends State<HomePage> {
                 for (int i = 0; i < games.length; i++) {
                   nbaWidgets.add(buildNBAGame(games[i]));
                 }
-                return Column(
-                  children: nbaWidgets,
+                return Expanded(
+                  child: SingleChildScrollView(
+                    child: Column(
+                      children: nbaWidgets,
+                    ),
+                  ),
                 );
               }
             },
