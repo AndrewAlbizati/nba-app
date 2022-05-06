@@ -28,6 +28,18 @@ class _HomePageState extends State<HomePage> {
     }
   }
 
+  void _incrementDate() {
+    setState(() {
+      selectedDate = selectedDate.add(const Duration(days: 1));
+    });
+  }
+
+  void _decrementDate() {
+    setState(() {
+      selectedDate = selectedDate.subtract(const Duration(days: 1));
+    });
+  }
+
   @override
   void initState() {
     super.initState();
@@ -60,21 +72,66 @@ class _HomePageState extends State<HomePage> {
       body: Column(
         children: [
           Row(
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              TextButton.icon(
-                icon: Icon(Icons.arrow_back),
-                label: Text('Back'),
-                onPressed: () {},
+              Padding(
+                padding: const EdgeInsets.all(10),
+                child: TextButton(
+                  child: Row(
+                    children: [
+                      Icon(Icons.arrow_back),
+                      const Text(
+                        'Back',
+                        style: TextStyle(
+                          fontSize: 20.0,
+                        ),
+                      ),
+                    ],
+                  ),
+                  onPressed: () {
+                    _decrementDate();
+                  },
+                ),
               ),
-              Text("${selectedDate.toLocal()}".split(' ')[0]),
-              ElevatedButton(
-                onPressed: () => _selectDate(context),
-                child: Text('Select date'),
+              Padding(
+                padding: const EdgeInsets.all(10),
+                child: Text(
+                  "${selectedDate.toLocal()}".split(' ')[0],
+                  style: TextStyle(
+                    fontSize: 25.0,
+                  ),
+                ),
               ),
-              TextButton.icon(
-                icon: Icon(Icons.arrow_forward),
-                label: Text('Forward'),
-                onPressed: () {},
+              Padding(
+                padding: const EdgeInsets.all(10),
+                child: ElevatedButton(
+                  onPressed: () => _selectDate(context),
+                  child: Text(
+                    'Select date',
+                    style: TextStyle(
+                      fontSize: 20.0,
+                    ),
+                  ),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(10),
+                child: TextButton(
+                  child: Row(
+                    children: [
+                      Text(
+                        'Forward',
+                        style: TextStyle(
+                          fontSize: 20.0,
+                        ),
+                      ),
+                      Icon(Icons.arrow_forward),
+                    ],
+                  ),
+                  onPressed: () {
+                    _incrementDate();
+                  },
+                ),
               ),
             ],
           ),
