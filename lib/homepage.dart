@@ -19,7 +19,7 @@ class _HomePageState extends State<HomePage> {
     final DateTime? picked = await showDatePicker(
         context: context,
         initialDate: selectedDate,
-        firstDate: DateTime(2015, 8),
+        firstDate: DateTime(2000, 1),
         lastDate: DateTime(2101));
     if (picked != null && picked != selectedDate) {
       setState(() {
@@ -71,108 +71,120 @@ class _HomePageState extends State<HomePage> {
       ),
       body: Column(
         children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Padding(
-                padding: const EdgeInsets.all(10),
-                child: TextButton(
-                  child: Row(
-                    children: [
-                      Icon(Icons.arrow_back),
-                      const Text(
-                        'Back',
-                        style: TextStyle(
-                          fontSize: 20.0,
+          Expanded(
+            flex: 1,
+            child: Align(
+              alignment: Alignment.topCenter,
+              child: FittedBox(
+                fit: BoxFit.scaleDown,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(10),
+                      child: TextButton(
+                        child: Row(
+                          children: [
+                            Icon(Icons.arrow_back),
+                            const Text(
+                              'Back',
+                              style: TextStyle(
+                                fontSize: 20.0,
+                              ),
+                            ),
+                          ],
                         ),
+                        onPressed: () {
+                          _decrementDate();
+                        },
                       ),
-                    ],
-                  ),
-                  onPressed: () {
-                    _decrementDate();
-                  },
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(10),
-                child: Text(
-                  "${selectedDate.toLocal()}".split(' ')[0],
-                  style: TextStyle(
-                    fontSize: 25.0,
-                  ),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(10),
-                child: ElevatedButton(
-                  onPressed: () => _selectDate(context),
-                  child: Text(
-                    'Select date',
-                    style: TextStyle(
-                      fontSize: 20.0,
                     ),
-                  ),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(10),
-                child: TextButton(
-                  child: Row(
-                    children: [
-                      Text(
-                        'Forward',
+                    Padding(
+                      padding: const EdgeInsets.all(10),
+                      child: Text(
+                        "${selectedDate.toLocal()}".split(' ')[0],
                         style: TextStyle(
-                          fontSize: 20.0,
+                          fontSize: 25.0,
                         ),
                       ),
-                      Icon(Icons.arrow_forward),
-                    ],
-                  ),
-                  onPressed: () {
-                    _incrementDate();
-                  },
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(10),
+                      child: ElevatedButton(
+                        onPressed: () => _selectDate(context),
+                        child: Text(
+                          'Select date',
+                          style: TextStyle(
+                            fontSize: 20.0,
+                          ),
+                        ),
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(10),
+                      child: TextButton(
+                        child: Row(
+                          children: [
+                            Text(
+                              'Forward',
+                              style: TextStyle(
+                                fontSize: 20.0,
+                              ),
+                            ),
+                            Icon(Icons.arrow_forward),
+                          ],
+                        ),
+                        onPressed: () {
+                          _incrementDate();
+                        },
+                      ),
+                    ),
+                  ],
                 ),
               ),
-            ],
+            ),
           ),
-          FutureBuilder(
-            future: getGames(
-                int.parse(selectedDate
-                    .toLocal()
-                    .toString()
-                    .split(' ')[0]
-                    .split('-')[0]),
-                int.parse(selectedDate
-                    .toLocal()
-                    .toString()
-                    .split(' ')[0]
-                    .split('-')[1]),
-                int.parse(selectedDate
-                    .toLocal()
-                    .toString()
-                    .split(' ')[0]
-                    .split('-')[2])),
-            builder:
-                (BuildContext context, AsyncSnapshot<List<Game>> snapshot) {
-              if (!snapshot.hasData) {
-                return Center(
-                  child: CircularProgressIndicator(),
-                );
-              } else {
-                final games = snapshot.data!;
-                List<Widget> nbaWidgets = [];
-                for (int i = 0; i < games.length; i++) {
-                  nbaWidgets.add(buildNBAGame(games[i]));
-                }
-                return Expanded(
-                  child: SingleChildScrollView(
-                    child: Column(
+          Expanded(
+            flex: 10,
+            child: FutureBuilder(
+              future: getGames(
+                  int.parse(selectedDate
+                      .toLocal()
+                      .toString()
+                      .split(' ')[0]
+                      .split('-')[0]),
+                  int.parse(selectedDate
+                      .toLocal()
+                      .toString()
+                      .split(' ')[0]
+                      .split('-')[1]),
+                  int.parse(selectedDate
+                      .toLocal()
+                      .toString()
+                      .split(' ')[0]
+                      .split('-')[2])),
+              builder:
+                  (BuildContext context, AsyncSnapshot<List<Game>> snapshot) {
+                if (!snapshot.hasData) {
+                  return Center(
+                    child: CircularProgressIndicator(),
+                  );
+                } else {
+                  final games = snapshot.data!;
+                  if (games.length == 0) {
+                    return Text('No NBA games');
+                  } else {
+                    List<Widget> nbaWidgets = [];
+                    for (int i = 0; i < games.length; i++) {
+                      nbaWidgets.add(buildNBAGame(games[i], context));
+                    }
+                    return ListView(
                       children: nbaWidgets,
-                    ),
-                  ),
-                );
-              }
-            },
+                    );
+                  }
+                }
+              },
+            ),
           ),
         ],
       ),

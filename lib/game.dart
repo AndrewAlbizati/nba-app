@@ -42,21 +42,28 @@ class Game {
     season = json['season'];
 
     status = json['status'];
-    status = _convertStatus(status);
-
     time = json['time'];
+
+    status = _convertStatus(status, time);
+
     homeTeamScore = json['home_team_score'];
     visitorTeamScore = json['visitor_team_score'];
   }
 
-  String _convertStatus(String time) {
-    if (!time.contains('ET') && !time.contains('PM') && !time.contains('AM')) {
-      return time;
+  String _convertStatus(String s, String t) {
+    if (s == 'Final') {
+      return s;
     }
 
-    int hour = int.parse(time.split(':')[0]);
-    int minute = int.parse(time.split(':')[1].split(' ')[0]);
-    String timeOfDay = time.split(' ')[1];
+    if (!s.contains('ET') && !s.contains('PM') && !s.contains('AM')) {
+      int quarter = int.parse(s.substring(0, 1));
+
+      return t + ' (' + quarter.toString() + 'Q)';
+    }
+
+    int hour = int.parse(s.split(':')[0]);
+    int minute = int.parse(s.split(':')[1].split(' ')[0]);
+    String timeOfDay = s.split(' ')[1];
     if (timeOfDay == 'PM') {
       hour += 12;
     }
