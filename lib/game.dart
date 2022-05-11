@@ -1,5 +1,6 @@
 import 'package:intl/intl.dart';
 import 'team.dart';
+import 'player_stats.dart';
 
 class Game {
   late int id;
@@ -16,6 +17,8 @@ class Game {
 
   late int homeTeamScore;
   late int visitorTeamScore;
+
+  late List<PlayerStats> stats;
 
   Game(
       {required this.id,

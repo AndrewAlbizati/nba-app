@@ -1,39 +1,10 @@
 import 'package:flutter/material.dart';
 import 'game.dart';
+import 'stats_page.dart';
 
 void _showStatPage(Game game, BuildContext context) {
   Navigator.push(context, MaterialPageRoute(builder: ((context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Row(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            Image.asset(
-              'assets/logo.png',
-              fit: BoxFit.contain,
-              height: 50,
-            ),
-            Container(
-              padding: const EdgeInsets.all(8.0),
-              child: Text('Stats for ' +
-                  game.visitorTeam.abbreviation +
-                  ' vs ' +
-                  game.homeTeam.abbreviation),
-            )
-          ],
-        ),
-      ),
-      body: Center(
-        child: Column(
-          children: [
-            Text('t'),
-            Text('e'),
-            Text('s'),
-            Text('t'),
-          ],
-        ),
-      ),
-    );
+    return buildStatsPage(game);
   })));
 }
 

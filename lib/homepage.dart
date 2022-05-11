@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'game.dart';
 import 'nba_game.dart';
 import 'request_data.dart';
+import 'appbar.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key, required this.title}) : super(key: key);
@@ -53,20 +54,10 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Row(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            Image.asset(
-              'assets/logo.png',
-              fit: BoxFit.contain,
-              height: 50,
-            ),
-            Container(
-              padding: const EdgeInsets.all(8.0),
-              child: Text('Scores'),
-            )
-          ],
+      appBar: buildAppBar(
+        Container(
+          padding: const EdgeInsets.all(8.0),
+          child: Text('Scores'),
         ),
       ),
       body: Column(
