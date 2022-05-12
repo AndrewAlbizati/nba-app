@@ -23,6 +23,7 @@ class PlayerStats {
   late int stl;
   late int turnover;
 
+  late int teamId;
   late int playerId;
   late String firstName;
   late String lastName;
@@ -49,6 +50,7 @@ class PlayerStats {
     required this.stl,
     required this.turnover,
     required this.playerId,
+    required this.teamId,
     required this.firstName,
     required this.lastName,
   });
@@ -76,6 +78,7 @@ class PlayerStats {
     turnover = json['turnover'];
 
     playerId = json['player']['id'];
+    teamId = json['team']['id'];
     firstName = json['player']['first_name'];
     lastName = json['player']['last_name'];
   }
