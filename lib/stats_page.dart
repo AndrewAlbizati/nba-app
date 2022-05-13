@@ -23,11 +23,31 @@ Scaffold _buildScaffold(Game game, Widget body) {
 
 DataTable _buildDataTable(Game g, int teamId) {
   List<DataRow> rows = [];
-  for (int i = 0; i < g.stats.length; i++) {
-    if (g.stats[i].teamId == teamId && g.stats[i].min != "0:00") {
-      rows.add(_buildDataRow(g.stats[i]));
+
+  // Add players with at least 1 minute played
+  List<PlayerStats> sortedStats = [];
+  for (PlayerStats stats in g.stats) {
+    if (stats.teamId == teamId &&
+        stats.min != '' &&
+        stats.min.split(':')[0] != '0') {
+      sortedStats.add(stats);
     }
   }
+  // Sort the list by minutes played
+  sortedStats.sort((a, b) {
+    int player1Time = (int.parse(a.min.split(":")[0]) * 60) +
+        (int.parse(a.min.split(":")[1]));
+    int player2Time = (int.parse(b.min.split(":")[0]) * 60) +
+        (int.parse(b.min.split(":")[1]));
+    return player1Time.compareTo(player2Time);
+  });
+  sortedStats = List.from(sortedStats.reversed);
+
+  // Build the rows
+  for (int i = 0; i < sortedStats.length; i++) {
+    rows.add(_buildDataRow(sortedStats[i]));
+  }
+
   return DataTable(
     dataRowHeight: 25,
     columns: [
@@ -48,7 +68,7 @@ DataRow _buildDataRow(PlayerStats stats) {
   return DataRow(
     cells: [
       DataCell(Text(stats.firstName.substring(0, 1) + '. ' + stats.lastName)),
-      DataCell(Text(stats.min)),
+      DataCell(Text(stats.min.split(":")[0])),
       DataCell(Text(stats.fgm.toString() + ' - ' + stats.fga.toString())),
       DataCell(Text(stats.fg3m.toString() + ' - ' + stats.fg3a.toString())),
       DataCell(Text(stats.reb.toString())),
