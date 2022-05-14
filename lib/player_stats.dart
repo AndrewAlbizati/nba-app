@@ -1,6 +1,3 @@
-import 'package:intl/intl.dart';
-import 'team.dart';
-
 class PlayerStats {
   late int statsId;
   late int ast;
