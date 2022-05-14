@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'game.dart';
 import 'stats_page.dart';
+import 'request_data.dart';
 
-void _showStatPage(Game game, BuildContext context) {
+Future<void> _showStatPage(Game game, BuildContext context) async {
+  game.stats = await getStats(game.id);
   Navigator.push(context, MaterialPageRoute(builder: ((context) {
     return buildStatsPage(game);
   })));

@@ -26,7 +26,6 @@ Future<List<Game>> getGames(int year, int month, int day) async {
 
   for (int i = 0; i < games.length; i++) {
     Game g = Game.fromJson(games[i]);
-    g.stats = await getStats(g.id);
     list.add(g);
   }
 
