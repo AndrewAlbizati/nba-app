@@ -111,6 +111,10 @@ class _HomePageState extends State<HomePage> {
                         ),
                       ),
                     ),
+                    IconButton(
+                      icon: Icon(Icons.refresh),
+                      onPressed: () => setState(() {}),
+                    ),
                     Padding(
                       padding: const EdgeInsets.all(10),
                       child: TextButton(
