@@ -2,9 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:table_sticky_headers/table_sticky_headers.dart';
 import 'game.dart';
 import 'player_stats.dart';
+import 'request_data.dart';
 import 'appbar.dart';
 
-Scaffold _buildScaffold(Game game, Widget body) {
+Scaffold buildScaffold(Game game, Widget body) {
   return Scaffold(
     appBar: buildAppBar(
       Container(
@@ -66,9 +67,10 @@ Widget buildStatsTable(Game game, int teamId) {
   );
 }
 
-Widget buildStatsPage(Game game) {
+Future<Widget> buildStatsPage(Game game) async {
+  game.stats = await getStats(game.id);
   if (game.stats.length == 0) {
-    return _buildScaffold(
+    return buildScaffold(
       game,
       Container(
         alignment: Alignment.topCenter,
@@ -77,7 +79,7 @@ Widget buildStatsPage(Game game) {
     );
   }
 
-  return _buildScaffold(
+  return buildScaffold(
     game,
     Column(
       children: [

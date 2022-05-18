@@ -4,10 +4,30 @@ import 'stats_page.dart';
 import 'request_data.dart';
 
 Future<void> _showStatPage(Game game, BuildContext context) async {
-  game.stats = await getStats(game.id);
-  Navigator.push(context, MaterialPageRoute(builder: ((context) {
-    return buildStatsPage(game);
-  })));
+  Navigator.push(
+    context,
+    MaterialPageRoute(
+      builder: ((context) {
+        return FutureBuilder(
+          future: buildStatsPage(game),
+          builder: (BuildContext context, AsyncSnapshot<Widget> snapshot) {
+            if (!snapshot.hasData) {
+              return Center(
+                child: buildScaffold(
+                  game,
+                  Center(
+                    child: CircularProgressIndicator(),
+                  ),
+                ),
+              );
+            } else {
+              return snapshot.data!;
+            }
+          },
+        );
+      }),
+    ),
+  );
 }
 
 Widget buildNBAGame(Game game, BuildContext context) {

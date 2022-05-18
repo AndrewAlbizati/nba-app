@@ -77,7 +77,7 @@ class _HomePageState extends State<HomePage> {
                         child: Row(
                           children: [
                             Icon(Icons.arrow_back),
-                            const Text(
+                            Text(
                               'Back',
                               style: TextStyle(
                                 fontSize: 20.0,
@@ -143,21 +143,22 @@ class _HomePageState extends State<HomePage> {
             flex: 10,
             child: FutureBuilder(
               future: getGames(
-                  int.parse(selectedDate
-                      .toLocal()
-                      .toString()
-                      .split(' ')[0]
-                      .split('-')[0]),
-                  int.parse(selectedDate
-                      .toLocal()
-                      .toString()
-                      .split(' ')[0]
-                      .split('-')[1]),
-                  int.parse(selectedDate
-                      .toLocal()
-                      .toString()
-                      .split(' ')[0]
-                      .split('-')[2])),
+                int.parse(selectedDate
+                    .toLocal()
+                    .toString()
+                    .split(' ')[0]
+                    .split('-')[0]),
+                int.parse(selectedDate
+                    .toLocal()
+                    .toString()
+                    .split(' ')[0]
+                    .split('-')[1]),
+                int.parse(selectedDate
+                    .toLocal()
+                    .toString()
+                    .split(' ')[0]
+                    .split('-')[2]),
+              ),
               builder:
                   (BuildContext context, AsyncSnapshot<List<Game>> snapshot) {
                 if (!snapshot.hasData) {
