@@ -36,6 +36,7 @@ Widget buildStatsTable(Game game, int teamId) {
       sortedStats.add(stats);
     }
   }
+
   // Sort the list by minutes played
   sortedStats.sort((a, b) {
     int player1Time = (int.parse(a.min.split(":")[0]) * 60) +
@@ -73,6 +74,7 @@ Future<Widget> buildStatsPage(Game game) async {
     return buildScaffold(
       game,
       Container(
+        padding: const EdgeInsets.all(10),
         alignment: Alignment.topCenter,
         child: Text('Stats are not available for this game.'),
       ),
