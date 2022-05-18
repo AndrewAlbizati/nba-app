@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:table_sticky_headers/table_sticky_headers.dart';
 import 'game.dart';
 import 'player_stats.dart';
 import 'appbar.dart';
@@ -21,12 +22,13 @@ Scaffold _buildScaffold(Game game, Widget body) {
   );
 }
 
-DataTable _buildDataTable(Game g, int teamId) {
-  List<DataRow> rows = [];
+Widget buildStatsTable(Game game, int teamId) {
+  List<String> columnTitles = ["MIN", "FG", "3PT", "REB", "AST", "PF", "PTS"];
+  List<String> rowTitles = [];
+  List<List<String>> data = [[], [], [], [], [], [], []];
 
-  // Add players with at least 1 minute played
   List<PlayerStats> sortedStats = [];
-  for (PlayerStats stats in g.stats) {
+  for (PlayerStats stats in game.stats) {
     if (stats.teamId == teamId &&
         stats.min != '' &&
         stats.min.split(':')[0] != '0') {
@@ -43,39 +45,24 @@ DataTable _buildDataTable(Game g, int teamId) {
   });
   sortedStats = List.from(sortedStats.reversed);
 
-  // Build the rows
-  for (int i = 0; i < sortedStats.length; i++) {
-    rows.add(_buildDataRow(sortedStats[i]));
+  for (PlayerStats ps in sortedStats) {
+    rowTitles.add(ps.firstName.substring(0, 1) + ". " + ps.lastName);
+    data[0].add(ps.min.split(":")[0]);
+    data[1].add(ps.fgm.toString() + ' - ' + ps.fga.toString());
+    data[2].add(ps.fg3m.toString() + ' - ' + ps.fg3a.toString());
+    data[3].add(ps.reb.toString());
+    data[4].add(ps.ast.toString());
+    data[5].add(ps.pf.toString());
+    data[6].add(ps.pts.toString());
   }
 
-  return DataTable(
-    dataRowHeight: 25,
-    columns: [
-      DataColumn(label: Text('PLAYER')),
-      DataColumn(label: Text('MIN')),
-      DataColumn(label: Text('FG')),
-      DataColumn(label: Text('3PT')),
-      DataColumn(label: Text('REB')),
-      DataColumn(label: Text('AST')),
-      DataColumn(label: Text('PF')),
-      DataColumn(label: Text('PTS')),
-    ],
-    rows: rows,
-  );
-}
-
-DataRow _buildDataRow(PlayerStats stats) {
-  return DataRow(
-    cells: [
-      DataCell(Text(stats.firstName.substring(0, 1) + '. ' + stats.lastName)),
-      DataCell(Text(stats.min.split(":")[0])),
-      DataCell(Text(stats.fgm.toString() + ' - ' + stats.fga.toString())),
-      DataCell(Text(stats.fg3m.toString() + ' - ' + stats.fg3a.toString())),
-      DataCell(Text(stats.reb.toString())),
-      DataCell(Text(stats.ast.toString())),
-      DataCell(Text(stats.pf.toString())),
-      DataCell(Text(stats.pts.toString())),
-    ],
+  return StickyHeadersTable(
+    columnsLength: columnTitles.length,
+    rowsLength: rowTitles.length,
+    columnsTitleBuilder: (i) => Text(columnTitles[i]),
+    rowsTitleBuilder: (i) => Text(rowTitles[i]),
+    contentCellBuilder: (i, j) => Text(data[i][j]),
+    legendCell: Text('PLAYER'),
   );
 }
 
@@ -92,30 +79,34 @@ Widget buildStatsPage(Game game) {
 
   return _buildScaffold(
     game,
-    ListView(
+    Column(
       children: [
-        Padding(
+        Container(
           padding: const EdgeInsets.all(10),
+          alignment: Alignment.topLeft,
           child: Text(
             game.visitorTeam.name,
-            style: TextStyle(fontSize: 20.0),
+            style: TextStyle(
+              fontSize: 25.0,
+            ),
           ),
         ),
-        SingleChildScrollView(
-          scrollDirection: Axis.horizontal,
-          child: _buildDataTable(game, game.visitorTeam.id),
+        Expanded(
+          child: buildStatsTable(game, game.visitorTeam.id),
         ),
         Divider(),
-        Padding(
+        Container(
           padding: const EdgeInsets.all(10),
+          alignment: Alignment.topLeft,
           child: Text(
             game.homeTeam.name,
-            style: TextStyle(fontSize: 20.0),
+            style: TextStyle(
+              fontSize: 25.0,
+            ),
           ),
         ),
-        SingleChildScrollView(
-          scrollDirection: Axis.horizontal,
-          child: _buildDataTable(game, game.homeTeam.id),
+        Expanded(
+          child: buildStatsTable(game, game.homeTeam.id),
         ),
       ],
     ),
