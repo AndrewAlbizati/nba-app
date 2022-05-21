@@ -1,4 +1,5 @@
 import 'package:intl/intl.dart';
+import 'package:nba_app/cloud_functions/balldontlie.dart';
 import 'team.dart';
 import 'player_stats.dart';
 
@@ -9,8 +10,10 @@ class Game {
   late Team homeTeam;
   late Team visitorTeam;
 
-  late int period;
   late bool postseason;
+  late String postseasonStatus;
+
+  late int period;
   late int season;
   late String status;
   late String time;
@@ -40,10 +43,10 @@ class Game {
     homeTeam = Team.fromJson(json['home_team']);
     visitorTeam = Team.fromJson(json['visitor_team']);
 
-    period = json['period'];
     postseason = json['postseason'];
-    season = json['season'];
 
+    period = json['period'];
+    season = json['season'];
     status = json['status'];
     time = json['time'];
 
@@ -61,7 +64,7 @@ class Game {
     if (!s.contains('ET') && !s.contains('PM') && !s.contains('AM')) {
       int quarter = int.parse(s.substring(0, 1));
 
-      return t + ' (' + quarter.toString() + 'Q)';
+      return '$t (${quarter}Q)';
     }
 
     int hour = int.parse(s.split(':')[0]);
@@ -74,17 +77,16 @@ class Game {
     hour %= 24;
 
     // Convert UTC to local
-    DateTime dateTime = DateFormat("hh:mm")
-        .parse(hour.toString() + ':' + minute.toString(), true)
-        .toLocal();
+    DateTime dateTime =
+        DateFormat('hh:mm').parse('$hour:$minute', true).toLocal();
 
-    String status = (dateTime.hour % 12).toString() + ':';
+    String status = '${dateTime.hour % 12}:';
 
     // Add 0 if minute is too small (e.g. 12:5 --> 12:05)
     if (dateTime.minute < 10) {
-      status += '0' + dateTime.minute.toString();
+      status += '0${dateTime.minute}';
     } else {
-      status += dateTime.minute.toString();
+      status += '${dateTime.minute}';
     }
 
     // Add AM or PM
@@ -95,5 +97,57 @@ class Game {
     }
 
     return status;
+  }
+
+  Future<void> loadSeriesStatus() async {
+    if (!postseason) {
+      postseasonStatus = '';
+    }
+
+    List<Game> gamesInSeries = await getPostseasonGamesByTeams(this);
+
+    // Total the team wins
+    int visitorTeamWins = 0;
+    int homeTeamWins = 0;
+    for (Game g in gamesInSeries) {
+      if (g.status != 'Final') {
+        continue;
+      }
+
+      if (g.homeTeamScore > g.visitorTeamScore) {
+        if (g.homeTeam.id == homeTeam.id) {
+          homeTeamWins++;
+        } else {
+          visitorTeamWins++;
+        }
+      } else {
+        if (g.homeTeam.id == homeTeam.id) {
+          visitorTeamWins++;
+        } else {
+          homeTeamWins++;
+        }
+      }
+    }
+
+    // Set the status
+    if (homeTeamWins > visitorTeamWins) {
+      if (homeTeamWins < 4) {
+        postseasonStatus =
+            '${homeTeam.abbreviation} LEADS $homeTeamWins - $visitorTeamWins';
+      } else {
+        postseasonStatus =
+            '${homeTeam.abbreviation} WINS $homeTeamWins - $visitorTeamWins';
+      }
+    } else if (visitorTeamWins > homeTeamWins) {
+      if (visitorTeamWins < 4) {
+        postseasonStatus =
+            '${visitorTeam.abbreviation} LEADS $visitorTeamWins - $homeTeamWins';
+      } else {
+        postseasonStatus =
+            '${visitorTeam.abbreviation} WINS $visitorTeamWins - $homeTeamWins';
+      }
+    } else {
+      postseasonStatus = 'SERIES TIED $homeTeamWins - $visitorTeamWins';
+    }
   }
 }

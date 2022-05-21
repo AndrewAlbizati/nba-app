@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'game.dart';
-import 'stats_page.dart';
-import 'request_data.dart';
+import '../models/game.dart';
+import '../screens/stats_page.dart';
 
 Future<void> _showStatPage(Game game, BuildContext context) async {
   Navigator.push(
@@ -42,7 +41,7 @@ Widget buildNBAGame(Game game, BuildContext context) {
             Expanded(
               flex: 1,
               child: Image.asset(
-                'assets/team-logos/' + game.visitorTeam.id.toString() + '.png',
+                'assets/team-logos/${game.visitorTeam.id}.png',
                 fit: BoxFit.scaleDown,
               ),
             ),
@@ -64,11 +63,13 @@ Widget buildNBAGame(Game game, BuildContext context) {
               child: FittedBox(
                 fit: BoxFit.scaleDown,
                 child: Text(
-                  game.visitorTeamScore.toString() +
-                      '  -  ' +
-                      game.homeTeamScore.toString() +
-                      '\n' +
-                      game.status,
+                  (() {
+                    if (game.postseason) {
+                      return '${game.visitorTeamScore}  -  ${game.homeTeamScore}\n${game.status}\n${game.postseasonStatus}';
+                    }
+
+                    return '${game.visitorTeamScore}  -  ${game.homeTeamScore}\n${game.status}';
+                  })(),
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     fontSize: 30.0,
@@ -93,7 +94,7 @@ Widget buildNBAGame(Game game, BuildContext context) {
             Expanded(
               flex: 1,
               child: Image.asset(
-                'assets/team-logos/' + game.homeTeam.id.toString() + '.png',
+                'assets/team-logos/${game.homeTeam.id}.png',
                 fit: BoxFit.contain,
               ),
             ),

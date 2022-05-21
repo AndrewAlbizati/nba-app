@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'game.dart';
-import 'nba_game.dart';
-import 'request_data.dart';
-import 'appbar.dart';
+import '../models/game.dart';
+import '../widgets/nba_game.dart';
+import '../cloud_functions/balldontlie.dart';
+import '../widgets/appbar.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key, required this.title}) : super(key: key);
@@ -93,7 +93,7 @@ class _HomePageState extends State<HomePage> {
                     Padding(
                       padding: const EdgeInsets.all(10),
                       child: Text(
-                        "${selectedDate.toLocal()}".split(' ')[0],
+                        '${selectedDate.toLocal()}'.split(' ')[0],
                         style: TextStyle(
                           fontSize: 25.0,
                         ),
