@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import '../models/game.dart';
-import '../screens/stats_page.dart';
+import '../screens/statspage.dart';
 
 Future<void> _showStatPage(Game game, BuildContext context) async {
   Navigator.push(
