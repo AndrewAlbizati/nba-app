@@ -74,10 +74,10 @@ Future<List<PlayerStats>> getStats(int gameId) async {
   return list;
 }
 
-Future<List<Player>> getPlayers(String search) async {
+Future<List<Player>> getPlayers(String search, int maxSize) async {
   List<Player> list = [];
   String url =
-      'https://www.balldontlie.io/api/v1/players?search=$search&per_page=100';
+      'https://www.balldontlie.io/api/v1/players?search=$search&per_page=$maxSize';
 
   final response = await http.get(Uri.parse(url));
 

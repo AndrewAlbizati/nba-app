@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import '../widgets/player_info.dart';
 import '../widgets/appbar.dart';
+import '../models/player.dart';
+import '../cloud_functions/balldontlie.dart';
 
 class PlayersPage extends StatefulWidget {
   @override
@@ -7,6 +10,9 @@ class PlayersPage extends StatefulWidget {
 }
 
 class _PlayersPageState extends State<PlayersPage> {
+  List<Widget> _players = [];
+  final _searchbarController = TextEditingController();
+
   @override
   void initState() {
     super.initState();
@@ -14,7 +20,22 @@ class _PlayersPageState extends State<PlayersPage> {
 
   @override
   void dispose() {
+    _searchbarController.dispose();
     super.dispose();
+  }
+
+  Future<void> _updateList() async {
+    _players.clear();
+    String query = _searchbarController.text;
+    if (query.isEmpty) {
+      return;
+    }
+
+    List<Player> players = await getPlayers(query, 15);
+    for (Player player in players) {
+      _players.add(buildPlayerInfo(player));
+    }
+    setState(() {});
   }
 
   @override
@@ -26,9 +47,45 @@ class _PlayersPageState extends State<PlayersPage> {
           child: Text('Players'),
         ),
       ),
-      body: IconButton(
-        onPressed: () {},
-        icon: const Icon(Icons.search),
+      body: SingleChildScrollView(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Container(
+              padding: EdgeInsets.all(10),
+              child: Row(
+                children: [
+                  Expanded(
+                    flex: 9,
+                    child: TextField(
+                      decoration: InputDecoration(
+                        hintText: 'Search for a player',
+                      ),
+                      controller: _searchbarController,
+                      onChanged: (text) async {
+                        _updateList();
+                      },
+                    ),
+                  ),
+                  Expanded(
+                    flex: 1,
+                    child: IconButton(
+                      icon: Icon(Icons.search),
+                      onPressed: () async {},
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Flexible(
+              child: ListView.builder(
+                itemCount: _players.length,
+                shrinkWrap: true,
+                itemBuilder: (context, index) => _players[index],
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

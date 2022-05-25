@@ -31,9 +31,17 @@ class Player {
     lastName = json['last_name'];
     position = json['position'];
 
-    heightFeet = json['height_feet'];
-    heightInches = json['height_inches'];
-    weightPounds = json['weight_pounds'];
+    if (json['height_feet'] != null) {
+      heightFeet = json['height_feet'];
+    }
+
+    if (json['height_feet'] != null) {
+      heightInches = json['height_inches'];
+    }
+
+    if (json['weight_pounds'] != null) {
+      weightPounds = json['weight_pounds'];
+    }
 
     team = Team.fromJson(json['team']);
   }
