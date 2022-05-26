@@ -1,11 +1,24 @@
 import 'package:flutter/material.dart';
 import '../models/player.dart';
+import '../screens/player_info_page.dart';
 
-Widget buildPlayerInfo(Player player) {
+Future<void> _showPlayerPage(Player player, BuildContext context) async {
+  Navigator.push(
+    context,
+    MaterialPageRoute(
+      builder: ((context) {
+        return buildPlayerPage(player);
+      }),
+    ),
+  );
+}
+
+Widget buildPlayerCard(Player player, BuildContext context) {
   return TextButton(
     child: Container(
       padding: EdgeInsets.fromLTRB(0, 10, 0, 10),
       child: SizedBox(
+        height: 50,
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
@@ -33,6 +46,6 @@ Widget buildPlayerInfo(Player player) {
         ),
       ),
     ),
-    onPressed: () {},
+    onPressed: () => _showPlayerPage(player, context),
   );
 }

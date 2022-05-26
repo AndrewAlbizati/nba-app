@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../widgets/player_info.dart';
+import '../widgets/player_info_card.dart';
 import '../widgets/appbar.dart';
 import '../models/player.dart';
 import '../cloud_functions/balldontlie.dart';
@@ -27,14 +27,13 @@ class _PlayersPageState extends State<PlayersPage> {
   Future<void> _updateList() async {
     _players.clear();
     String query = _searchbarController.text;
-    if (query.isEmpty) {
-      return;
+    if (query.isNotEmpty) {
+      List<Player> players = await getPlayers(query, 10);
+      for (Player player in players) {
+        _players.add(buildPlayerCard(player, context));
+      }
     }
 
-    List<Player> players = await getPlayers(query, 15);
-    for (Player player in players) {
-      _players.add(buildPlayerInfo(player));
-    }
     setState(() {});
   }
 

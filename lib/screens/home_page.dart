@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'scorespage.dart';
-import 'playerspage.dart';
+import 'scores_page.dart';
+import 'players_search_page.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key, required this.title}) : super(key: key);
