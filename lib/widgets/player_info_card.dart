@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:nba_app/models/player_season_average.dart';
 import '../models/player.dart';
+import '../cloud_functions/balldontlie.dart';
 import '../screens/player_info_page.dart';
 
 Future<void> _showPlayerPage(Player player, BuildContext context) async {

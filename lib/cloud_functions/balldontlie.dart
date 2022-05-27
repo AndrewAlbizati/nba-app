@@ -4,6 +4,7 @@ import '../models/game.dart';
 import '../models/player_stats.dart';
 import '../models/player.dart';
 import '../models/team.dart';
+import '../models/player_season_average.dart';
 
 Future<Game> getGame(int id) async {
   String url = 'https://www.balldontlie.io/api/v1/games/$id&per_page=100';
@@ -97,6 +98,21 @@ Future<Player> getPlayer(int id) async {
   Map<String, dynamic> data = jsonDecode(response.body);
 
   return Player.fromJson(data['data']);
+}
+
+Future<PlayerSeasonAverage> getPlayerSeasonAverage(int id, int season) async {
+  String url =
+      'https://www.balldontlie.io/api/v1/season_averages?season=$season&player_ids[]=$id';
+  final response = await http.get(Uri.parse(url));
+
+  Map<String, dynamic> data = jsonDecode(response.body);
+  List<dynamic> list = data['data'];
+
+  if (list.isEmpty) {
+    return PlayerSeasonAverage.empty();
+  } else {
+    return PlayerSeasonAverage.fromJson(data['data'][0]);
+  }
 }
 
 Future<Team> getTeam(int id) async {
