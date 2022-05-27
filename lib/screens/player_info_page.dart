@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:nba_app/cloud_functions/balldontlie.dart';
-import 'package:nba_app/models/player_season_average.dart';
+import 'package:table_sticky_headers/table_sticky_headers.dart';
+import '../cloud_functions/balldontlie.dart';
+import '../models/player_season_average.dart';
 import '../models/player.dart';
 import '../widgets/appbar.dart';
 
@@ -25,30 +26,32 @@ Future<Widget> buildStatsTable(Player player) async {
   List<String> columnTitles = [
     'GP',
     'MIN',
-    'FG',
-    '3PT',
+    'FG%',
+    'FG3%',
     'REB',
     'AST',
     'PF',
     'PTS'
   ];
   List<String> rowTitles = [];
-  List<List<String>> data = [[], [], [], [], [], [], [], []];
+  List<List<String>> data = [[], [], [], [], [], [], []];
 
   // Organize the stats for the table
   for (int season = 1979; season < 2022; season++) {
-    PlayerSeasonAverage average =
-        await getPlayerSeasonAverage(player.id, season);
-    for (PlayerStats ps in sortedStats) {
-      rowTitles.add('${ps.firstName.substring(0, 1)}. ${ps.lastName}');
-      data[0].add(ps.min.split(':')[0]);
-      data[1].add('${ps.fgm} - ${ps.fga}');
-      data[2].add('${ps.fg3m} - ${ps.fg3a}');
-      data[3].add('${ps.reb}');
-      data[4].add('${ps.ast}');
-      data[5].add('${ps.pf}');
-      data[6].add('${ps.pts}');
+    print(season);
+    PlayerSeasonAverage psa = await getPlayerSeasonAverage(player.id, season);
+    if (psa.isEmpty) {
+      continue;
     }
+
+    rowTitles.add(season.toString());
+    data[0].add('${psa.gamesPlayed}');
+    data[1].add(psa.min);
+    data[2].add('${psa.fg_pct * 100}%');
+    data[3].add('${psa.fg3_pct * 100}%');
+    data[4].add('${psa.reb}');
+    data[5].add('${psa.ast}');
+    data[7].add('${psa.pts}');
   }
 
   // Create table for a specific team
@@ -58,7 +61,7 @@ Future<Widget> buildStatsTable(Player player) async {
     columnsTitleBuilder: (i) => Text(columnTitles[i]),
     rowsTitleBuilder: (i) => Text(rowTitles[i]),
     contentCellBuilder: (i, j) => Text(data[i][j]),
-    legendCell: Text('PLAYER'),
+    legendCell: Text('YEAR'),
   );
 }
 
@@ -94,7 +97,7 @@ Widget buildPlayerPage(Player player) {
           ),
           Divider(),
           Expanded(
-            flex: 10,
+            flex: 5,
             child: Container(
               alignment: Alignment.topLeft,
               child: Column(
@@ -156,6 +159,26 @@ Widget buildPlayerPage(Player player) {
                       ],
                     ),
                   ],
+                  Expanded(
+                    child: FutureBuilder(
+                      future: buildStatsTable(player),
+                      builder: (BuildContext context,
+                          AsyncSnapshot<Widget> snapshot) {
+                        if (!snapshot.hasData) {
+                          return Center(
+                            child: Column(
+                              children: [
+                                CircularProgressIndicator(),
+                                Text('Collecting season averages...'),
+                              ],
+                            ),
+                          );
+                        } else {
+                          return snapshot.data!;
+                        }
+                      },
+                    ),
+                  ),
                 ],
               ),
             ),

@@ -1,4 +1,6 @@
 class PlayerSeasonAverage {
+  late bool isEmpty;
+
   late int gamesPlayed;
   late int playerId;
   late int season;
@@ -48,9 +50,12 @@ class PlayerSeasonAverage {
     required this.ft_pct,
   });
 
-  PlayerSeasonAverage.empty();
+  PlayerSeasonAverage.empty() {
+    isEmpty = true;
+  }
 
   PlayerSeasonAverage.fromJson(Map<String, dynamic> json) {
+    isEmpty = false;
     gamesPlayed = json['games_played'];
     playerId = json['player_id'];
     season = json['season'];
