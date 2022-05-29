@@ -35,6 +35,7 @@ Widget buildNBAGame(Game game, BuildContext context) {
     child: TextButton(
       onPressed: () => _showStatPage(game, context),
       child: SizedBox(
+        height: 100,
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [

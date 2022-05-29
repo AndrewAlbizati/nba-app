@@ -30,15 +30,13 @@ Future<Widget> buildStatsTable(Player player) async {
     'FG3%',
     'REB',
     'AST',
-    'PF',
-    'PTS'
+    'PTS',
   ];
   List<String> rowTitles = [];
   List<List<String>> data = [[], [], [], [], [], [], []];
 
   // Organize the stats for the table
   for (int season = 1979; season < 2022; season++) {
-    print(season);
     PlayerSeasonAverage psa = await getPlayerSeasonAverage(player.id, season);
     if (psa.isEmpty) {
       continue;
@@ -47,11 +45,11 @@ Future<Widget> buildStatsTable(Player player) async {
     rowTitles.add(season.toString());
     data[0].add('${psa.gamesPlayed}');
     data[1].add(psa.min);
-    data[2].add('${psa.fg_pct * 100}%');
-    data[3].add('${psa.fg3_pct * 100}%');
+    data[2].add('${(psa.fg_pct * 100).toStringAsFixed(1)}%');
+    data[3].add('${(psa.fg3_pct * 100).toStringAsFixed(1)}%');
     data[4].add('${psa.reb}');
     data[5].add('${psa.ast}');
-    data[7].add('${psa.pts}');
+    data[6].add('${psa.pts}');
   }
 
   // Create table for a specific team
@@ -95,9 +93,8 @@ Widget buildPlayerPage(Player player) {
               ),
             ),
           ),
-          Divider(),
           Expanded(
-            flex: 5,
+            flex: 8,
             child: Container(
               alignment: Alignment.topLeft,
               child: Column(
@@ -159,6 +156,13 @@ Widget buildPlayerPage(Player player) {
                       ],
                     ),
                   ],
+                  Divider(),
+                  Text(
+                    'Regular Season Averages',
+                    style: TextStyle(
+                      fontSize: 17,
+                    ),
+                  ),
                   Expanded(
                     child: FutureBuilder(
                       future: buildStatsTable(player),
@@ -169,7 +173,7 @@ Widget buildPlayerPage(Player player) {
                             child: Column(
                               children: [
                                 CircularProgressIndicator(),
-                                Text('Collecting season averages...'),
+                                Text('Collecting data...'),
                               ],
                             ),
                           );

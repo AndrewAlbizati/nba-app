@@ -61,16 +61,14 @@ class _PlayersPageState extends State<PlayersPage> {
                         hintText: 'Search for a player',
                       ),
                       controller: _searchbarController,
-                      onChanged: (text) async {
-                        _updateList();
-                      },
+                      onChanged: (text) async => _updateList(),
                     ),
                   ),
                   Expanded(
                     flex: 1,
                     child: IconButton(
                       icon: Icon(Icons.search),
-                      onPressed: () async {},
+                      onPressed: () async => _updateList(),
                     ),
                   ),
                 ],
