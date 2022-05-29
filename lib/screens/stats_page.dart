@@ -8,12 +8,13 @@ import '../widgets/appbar.dart';
 Scaffold buildScaffold(Game game, Widget body) {
   return Scaffold(
     appBar: buildAppBar(
-      Container(
-        padding: const EdgeInsets.fromLTRB(8, 0, 0, 0),
-        child: FittedBox(
-          fit: BoxFit.scaleDown,
+      Flexible(
+        child: Container(
+          padding: const EdgeInsets.fromLTRB(8, 0, 0, 0),
           child: Text(
-              'Stats for ${game.visitorTeam.abbreviation} vs ${game.homeTeam.abbreviation}'),
+            'Stats for ${game.visitorTeam.abbreviation} vs ${game.homeTeam.abbreviation}',
+            overflow: TextOverflow.fade,
+          ),
         ),
       ),
     ),

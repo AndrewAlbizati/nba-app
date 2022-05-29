@@ -8,12 +8,12 @@ import '../widgets/appbar.dart';
 Scaffold buildScaffold(Player player, Widget body) {
   return Scaffold(
     appBar: buildAppBar(
-      Container(
-        padding: const EdgeInsets.fromLTRB(8, 0, 0, 0),
-        child: FittedBox(
-          fit: BoxFit.scaleDown,
+      Flexible(
+        child: Container(
+          padding: const EdgeInsets.fromLTRB(8, 0, 0, 0),
           child: Text(
             'Player Info for ${player.firstName} ${player.lastName}',
+            overflow: TextOverflow.fade,
           ),
         ),
       ),
@@ -35,14 +35,17 @@ Future<Widget> buildStatsTable(Player player) async {
   List<String> rowTitles = [];
   List<List<String>> data = [[], [], [], [], [], [], []];
 
-  // Organize the stats for the table
-  for (int season = 1979; season < 2022; season++) {
+  // Iterate through 1979 - current year
+  var currentYear = DateTime.now().year;
+  for (int season = 1979; season < currentYear; season++) {
+    print(season);
     PlayerSeasonAverage psa = await getPlayerSeasonAverage(player.id, season);
     if (psa.isEmpty) {
       continue;
     }
 
-    rowTitles.add(season.toString());
+    // Organize the stats for the table
+    rowTitles.add('$season');
     data[0].add('${psa.gamesPlayed}');
     data[1].add(psa.min);
     data[2].add('${(psa.fg_pct * 100).toStringAsFixed(1)}%');
@@ -52,7 +55,7 @@ Future<Widget> buildStatsTable(Player player) async {
     data[6].add('${psa.pts}');
   }
 
-  // Create table for a specific team
+  // Create table
   return StickyHeadersTable(
     columnsLength: columnTitles.length,
     rowsLength: rowTitles.length,
@@ -172,8 +175,14 @@ Widget buildPlayerPage(Player player) {
                           return Center(
                             child: Column(
                               children: [
-                                CircularProgressIndicator(),
-                                Text('Collecting data...'),
+                                Container(
+                                  padding: EdgeInsets.all(10),
+                                  child: CircularProgressIndicator(),
+                                ),
+                                Container(
+                                  padding: EdgeInsets.all(10),
+                                  child: Text('Collecting data...'),
+                                ),
                               ],
                             ),
                           );

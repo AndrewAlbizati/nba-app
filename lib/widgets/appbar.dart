@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-AppBar buildAppBar(Container extra) {
+AppBar buildAppBar(Widget extra) {
   return AppBar(
     title: Row(
       mainAxisAlignment: MainAxisAlignment.start,

@@ -6,8 +6,10 @@ import '../models/player.dart';
 import '../models/team.dart';
 import '../models/player_season_average.dart';
 
+const baseUrl = 'https://www.balldontlie.io/api/v1';
+
 Future<Game> getGame(int id) async {
-  String url = 'https://www.balldontlie.io/api/v1/games/$id&per_page=100';
+  String url = '$baseUrl/games/$id&per_page=100';
   final response = await http.get(Uri.parse(url));
 
   Game game = Game.fromJson(jsonDecode(response.body));
@@ -18,8 +20,7 @@ Future<Game> getGame(int id) async {
 Future<List<Game>> getGames(int year, int month, int day) async {
   List<Game> list = [];
   String date = year.toString() + '-' + month.toString() + '-' + day.toString();
-  String url =
-      'https://www.balldontlie.io/api/v1/games?start_date=$date&end_date=$date&per_page=100';
+  String url = '$baseUrl/games?start_date=$date&end_date=$date&per_page=100';
   final response = await http.get(Uri.parse(url));
 
   Map<String, dynamic> gamesMap = jsonDecode(response.body);
@@ -41,7 +42,7 @@ Future<List<Game>> getPostseasonGamesByTeams(Game game) async {
   String startDate = '${game.season}-1-1';
   String endDate = game.date.split("T")[0];
   String url =
-      'https://www.balldontlie.io/api/v1/games?team_ids[]=${game.visitorTeam.id}&start_date=$startDate&end_date=$endDate&per_page=100&postseason=true';
+      '$baseUrl/games?team_ids[]=${game.visitorTeam.id}&start_date=$startDate&end_date=$endDate&per_page=100&postseason=true';
 
   final response = await http.get(Uri.parse(url));
 
@@ -61,8 +62,7 @@ Future<List<Game>> getPostseasonGamesByTeams(Game game) async {
 
 Future<List<PlayerStats>> getStats(int gameId) async {
   List<PlayerStats> list = [];
-  String url =
-      'https://www.balldontlie.io/api/v1/stats?game_ids[]=$gameId&per_page=100';
+  String url = '$baseUrl/stats?game_ids[]=$gameId&per_page=100';
 
   final response = await http.get(Uri.parse(url));
 
@@ -77,8 +77,7 @@ Future<List<PlayerStats>> getStats(int gameId) async {
 
 Future<List<Player>> getPlayers(String search, int maxSize) async {
   List<Player> list = [];
-  String url =
-      'https://www.balldontlie.io/api/v1/players?search=$search&per_page=$maxSize';
+  String url = '$baseUrl/players?search=$search&per_page=$maxSize';
 
   final response = await http.get(Uri.parse(url));
 
@@ -92,7 +91,7 @@ Future<List<Player>> getPlayers(String search, int maxSize) async {
 }
 
 Future<Player> getPlayer(int id) async {
-  String url = 'https://www.balldontlie.io/api/v1/players/$id';
+  String url = '$baseUrl/players/$id';
   final response = await http.get(Uri.parse(url));
 
   Map<String, dynamic> data = jsonDecode(response.body);
@@ -101,8 +100,7 @@ Future<Player> getPlayer(int id) async {
 }
 
 Future<PlayerSeasonAverage> getPlayerSeasonAverage(int id, int season) async {
-  String url =
-      'https://www.balldontlie.io/api/v1/season_averages?season=$season&player_ids[]=$id';
+  String url = '$baseUrl/season_averages?season=$season&player_ids[]=$id';
   final response = await http.get(Uri.parse(url));
 
   Map<String, dynamic> data = jsonDecode(response.body);
@@ -116,7 +114,7 @@ Future<PlayerSeasonAverage> getPlayerSeasonAverage(int id, int season) async {
 }
 
 Future<Team> getTeam(int id) async {
-  String url = 'https://www.balldontlie.io/api/v1/teams/$id';
+  String url = '$baseUrl/teams/$id';
   final response = await http.get(Uri.parse(url));
 
   Map<String, dynamic> data = jsonDecode(response.body);
