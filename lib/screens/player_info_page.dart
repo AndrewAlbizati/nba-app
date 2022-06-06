@@ -45,14 +45,14 @@ Future<Widget> buildStatsTable(Player player) async {
     }
 
     // Organize the stats for the table
-    rowTitles.add('$season');
+    rowTitles.add(_seasonToString(season));
     data[0].add('${psa.gamesPlayed}');
     data[1].add(psa.min);
     data[2].add('${(psa.fg_pct * 100).toStringAsFixed(1)}%');
     data[3].add('${(psa.fg3_pct * 100).toStringAsFixed(1)}%');
-    data[4].add('${psa.reb}');
-    data[5].add('${psa.ast}');
-    data[6].add('${psa.pts}');
+    data[4].add(psa.reb.toStringAsFixed(1));
+    data[5].add(psa.ast.toStringAsFixed(1));
+    data[6].add(psa.pts.toStringAsFixed(1));
   }
 
   // Create table
@@ -64,6 +64,24 @@ Future<Widget> buildStatsTable(Player player) async {
     contentCellBuilder: (i, j) => Text(data[i][j]),
     legendCell: Text('YEAR'),
   );
+}
+
+String _seasonToString(int season) {
+  String s = '\'';
+  if ((season % 100) < 10) {
+    s += '0${season % 100}';
+  } else {
+    s += '${season % 100}';
+  }
+
+  s += ' - \'';
+  if (((season + 1) % 100) < 10) {
+    s += '0${(season + 1) % 100}';
+  } else {
+    s += '${(season + 1) % 100}';
+  }
+
+  return s;
 }
 
 Widget buildPlayerPage(Player player) {
